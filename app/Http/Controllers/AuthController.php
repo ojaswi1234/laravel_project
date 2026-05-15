@@ -8,9 +8,16 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Routing\Controller as BaseController;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends BaseController
 {
+    private function ensureRequiredRolesExist(): void
+    {
+        Role::findOrCreate('admin', 'web');
+        Role::findOrCreate('superadmin', 'web');
+    }
+
     public function showLogin()
     {
         return view('auth.login');
@@ -18,6 +25,8 @@ class AuthController extends BaseController
 
     public function login(Request $request)
     {
+        $this->ensureRequiredRolesExist();
+
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
@@ -53,6 +62,8 @@ class AuthController extends BaseController
 
     public function register(Request $request)
     {
+        $this->ensureRequiredRolesExist();
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',

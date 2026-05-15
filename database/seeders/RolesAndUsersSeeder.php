@@ -9,13 +9,16 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Location;
 use App\Models\Product;
 use App\Models\Stock;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndUsersSeeder extends Seeder
 {
     public function run(): void
     {
-        $superAdminRole = Role::create(['name' => 'superadmin']);
-        $adminRole = Role::create(['name' => 'admin']);
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        $superAdminRole = Role::findOrCreate('superadmin', 'web');
+        $adminRole = Role::findOrCreate('admin', 'web');
 
         $superAdmin = User::create([
             'name' => 'Super Admin',

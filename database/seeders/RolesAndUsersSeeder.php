@@ -34,22 +34,42 @@ class RolesAndUsersSeeder extends Seeder
         ]);
         $admin->assignRole($adminRole);
 
-        $loc = Location::create([
-            'name' => 'Main Warehouse',
-            'city' => 'New York',
+        $loc1 = Location::create([
+            'name' => 'Mumbai Godown',
+            'city' => 'Mumbai',
             'manager_id' => $admin->id
         ]);
-
-        $prod = Product::create([
-            'sku' => 'SKU-001',
-            'name' => 'Test Product',
-            'reorder_level' => 10,
+        $loc2 = Location::create([
+            'name' => 'Delhi Distribution Center',
+            'city' => 'Delhi',
+            'manager_id' => $superAdmin->id
         ]);
 
-        Stock::create([
-            'product_id' => $prod->id,
-            'location_id' => $loc->id,
-            'quantity' => 50,
+        $prod1 = Product::create([
+            'sku' => 'MDH-MASALA-01',
+            'name' => 'MDH Garam Masala 100g',
+            'reorder_level' => 20,
         ]);
+        $prod2 = Product::create([
+            'sku' => 'AMUL-BUTTER-500',
+            'name' => 'Amul Butter 500g',
+            'reorder_level' => 50,
+        ]);
+        $prod3 = Product::create([
+            'sku' => 'PARLE-G-150',
+            'name' => 'Parle-G Biscuits 150g',
+            'reorder_level' => 100,
+        ]);
+        $prod4 = Product::create([
+            'sku' => 'MAGGI-NOODLES-04',
+            'name' => 'Maggi 2-Minute Noodles 4-pack',
+            'reorder_level' => 150,
+        ]);
+
+        Stock::create(['product_id' => $prod1->id, 'location_id' => $loc1->id, 'quantity' => 120]);
+        Stock::create(['product_id' => $prod2->id, 'location_id' => $loc1->id, 'quantity' => 45]);
+        Stock::create(['product_id' => $prod3->id, 'location_id' => $loc2->id, 'quantity' => 250]);
+        Stock::create(['product_id' => $prod4->id, 'location_id' => $loc2->id, 'quantity' => 300]);
+        Stock::create(['product_id' => $prod1->id, 'location_id' => $loc2->id, 'quantity' => 15]); // Low stock
     }
 }

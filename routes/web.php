@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:superadmin')->prefix('superadmin')->name('superadmin.')->group(function () {
         Route::get('/dashboard', function () { return view('superadmin.dashboard'); })->name('dashboard');
-        // Placeholders for other routes
+        // Other routes can be populated here in future.
         Route::get('/locations', function () { return view('superadmin.locations'); })->name('locations');
         Route::get('/products', function () { return view('superadmin.products'); })->name('products');
         Route::get('/stock', function () { return view('superadmin.stock'); })->name('stock');

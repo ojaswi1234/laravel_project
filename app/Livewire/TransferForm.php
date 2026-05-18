@@ -54,26 +54,32 @@ class TransferForm extends Component
             $destStock->quantity += $this->quantity;
             $destStock->save();
 
-            // Record movements
+            // Record movement
             StockMovement::create([
-                'stock_id' => $sourceStock->id,
-                'type' => 'OUT',
+                'product_id' => $this->product_id,
+                'from_location_id' => $this->source_location_id,
+                'to_location_id' => $this->destination_location_id,
+                'type' => 'transfer',
                 'quantity' => $this->quantity,
-                'reason' => 'Transfer to ' . $destStock->location->name . ($this->reason ? ': ' . $this->reason : ''),
-                'user_id' => auth()->id(),
+                'note' => $this->reason ?: 'Transfer from ' . $sourceStock->location->name . ' to ' . $destStock->location->name,
+                'created_by' => auth()->id(),
             ]);
 
-            StockMovement::create([
-                'stock_id' => $destStock->id,
-                'type' => 'IN',
-                'quantity' => $this->quantity,
-                'reason' => 'Transfer from ' . $sourceStock->location->name . ($this->reason ? ': ' . $this->reason : ''),
-                'user_id' => auth()->id(),
-            ]);
+            event(new StockUpdated(
+                $sourceStock->product_id,
+                $sourceStock->location_id,
+                $sourceStock->quantity,
+                auth()->id(),
+                now()->toDateTimeString()
+            ));
+            event(new StockUpdated(
+                $destStock->product_id,
+                $destStock->location_id,
+                $destStock->quantity,
+                auth()->id(),
+                now()->toDateTimeString()
+            ));
 
-            event(new StockUpdated($sourceStock));
-            event(new StockUpdated($destStock));
-            // Ensure this event exists if called
             if (class_exists(StockTransferCreated::class)) {
                 // event(new StockTransferCreated(...));
             }

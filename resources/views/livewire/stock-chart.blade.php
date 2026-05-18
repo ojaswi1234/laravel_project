@@ -8,7 +8,7 @@
         </select>
     </div>
     
-    <div class="w-full" style="height: 300px;">
+    <div class="w-full" style="height: 300px;" wire:ignore>
         <canvas id="stockChart"></canvas>
     </div>
 
@@ -23,23 +23,27 @@
                     chart.destroy();
                 }
                 chart = new Chart(ctx, {
-                    type: 'bar',
+                    type: 'line',
                     data: {
                         labels: labels,
                         datasets: [
                             {
                                 label: 'Stock IN',
                                 data: inData,
-                                backgroundColor: 'rgba(46, 158, 91, 0.7)',
+                                backgroundColor: 'rgba(46, 158, 91, 0.2)',
                                 borderColor: 'rgba(46, 158, 91, 1)',
-                                borderWidth: 1
+                                borderWidth: 2,
+                                tension: 0.4,
+                                fill: true
                             },
                             {
                                 label: 'Stock OUT',
                                 data: outData,
-                                backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                                backgroundColor: 'rgba(239, 68, 68, 0.2)',
                                 borderColor: 'rgba(239, 68, 68, 1)',
-                                borderWidth: 1
+                                borderWidth: 2,
+                                tension: 0.4,
+                                fill: true
                             }
                         ]
                     },
@@ -60,15 +64,10 @@
             const outData = @json($outData);
             
             initChart(labels, inData, outData);
-
-            Livewire.hook('morph.updated', (el, component) => {
-                // For simplicity, we could re-read data from component, but Livewire 3 events are better handled differently. 
-                // Since this chart might reset on render, simple approach is re-initializing using dom updates
-            });
             
-            // To properly update, we observe Livewire component data 
             Livewire.on('chart-updated', (data) => {
-                 initChart(data[0].labels, data[0].inData, data[0].outData);
+                 let payload = Array.isArray(data) ? data[0] : data;
+                 initChart(payload.labels, payload.inData, payload.outData);
             });
         });
     </script>

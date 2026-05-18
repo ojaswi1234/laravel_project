@@ -19,7 +19,7 @@ class LiveActivityFeed extends Component
     public function render()
     {
         return view('livewire.live-activity-feed', [
-            'movements' => StockMovement::with(['stock.product', 'stock.location', 'user'])
+            'movements' => StockMovement::with(['product', 'toLocation', 'fromLocation', 'createdBy'])
                 ->latest()
                 ->take($this->limit)
                 ->get()

@@ -54,14 +54,22 @@ class MovementForm extends Component
             $stock->save();
 
             StockMovement::create([
-                'stock_id' => $stock->id,
-                'type' => $this->type,
+                'product_id' => $this->product_id,
+                'to_location_id' => $this->type === 'IN' || $this->type === 'ADJUSTMENT' ? $this->location_id : null,
+                'from_location_id' => $this->type === 'OUT' ? $this->location_id : null,
+                'type' => strtolower($this->type),
                 'quantity' => abs($adjustment),
-                'reason' => $this->reason ?: 'Manual entry',
-                'user_id' => auth()->id(),
+                'note' => $this->reason ?: 'Manual entry',
+                'created_by' => auth()->id(),
             ]);
 
-            event(new StockUpdated($stock));
+            event(new StockUpdated(
+                $stock->product_id,
+                $stock->location_id,
+                $stock->quantity,
+                auth()->id(),
+                now()->toDateTimeString()
+            ));
 
             $this->reset(['product_id', 'location_id', 'type', 'quantity', 'reason']);
             session()->flash('message', 'Stock movement recorded successfully.');

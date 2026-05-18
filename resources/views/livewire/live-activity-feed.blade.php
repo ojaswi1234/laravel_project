@@ -11,16 +11,16 @@
         @forelse($movements as $movement)
             <div class="flex flex-col pb-3 border-b border-gray-100 last:border-0 text-sm">
                 <div class="flex justify-between items-start">
-                    <span class="font-medium text-text-primary">{{ $movement->stock->product->name }}</span>
+                    <span class="font-medium text-text-primary">{{ $movement->product->name ?? 'Unknown Product' }}</span>
                     <span class="text-xs text-text-secondary">{{ $movement->created_at->diffForHumans() }}</span>
                 </div>
                 <div class="flex justify-between mt-1">
-                    <span class="text-text-secondary">{{ $movement->stock->location->name }}</span>
-                    <span class="font-semibold {{ $movement->type === 'IN' ? 'text-green-600' : 'text-alert-red' }}">
-                        {{ $movement->type === 'IN' ? '+' : '-' }}{{ $movement->quantity }}
+                    <span class="text-text-secondary">{{ $movement->toLocation ? $movement->toLocation->name : ($movement->fromLocation ? $movement->fromLocation->name : 'Unknown') }}</span>
+                    <span class="font-semibold {{ in_array($movement->type, ['in', 'IN']) ? 'text-green-600' : (in_array($movement->type, ['out', 'OUT']) ? 'text-alert-red' : 'text-blue-600') }}">
+                        {{ $movement->type === 'in' ? '+' : ($movement->type === 'out' ? '-' : '↔') }}{{ $movement->quantity }}
                     </span>
                 </div>
-                <div class="text-xs text-text-secondary mt-1">By {{ $movement->user->name ?? 'System' }} {{ $movement->reason ? '- ' . $movement->reason : '' }}</div>
+                <div class="text-xs text-text-secondary mt-1">By {{ $movement->createdBy->name ?? 'System' }} {{ $movement->note ? '- ' . $movement->note : '' }}</div>
             </div>
         @empty
             <div class="text-sm text-text-secondary italic">No recent activity.</div>

@@ -8,14 +8,14 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    // server: {
-    //     host: '0.0.0.0',
-    //     hmr: {
-    //         host: process.env.CODESPACE_NAME
-    //             ? `${process.env.CODESPACE_NAME}-5173.app.github.dev`
-    //             : 'localhost',
-    //         protocol: 'wss',
-    //         clientPort: 443,
-    //     },
-    // },
+    server: {
+        host: '0.0.0.0',
+        hmr: {
+            host: process.env.CODESPACE_NAME
+                ? `${process.env.CODESPACE_NAME}-5173.app.github.dev`
+                : 'localhost',
+            protocol: 'wss',
+            clientPort: 443,
+        },
+    },
 });

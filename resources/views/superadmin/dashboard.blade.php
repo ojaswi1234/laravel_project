@@ -9,7 +9,7 @@
         </div>
         <div class="bg-white p-6 rounded-lg border border-green-border shadow-hover">
             <h4 class="text-sm font-medium text-text-secondary">Total Value</h4>
-            <p class="text-3xl font-bold text-green-dark">$0.00</p>
+            <p class="text-3xl font-bold text-green-dark">₹{{ number_format(\App\Models\Stock::join('products', 'stock.product_id', '=', 'products.id')->sum(\Illuminate\Support\Facades\DB::raw('stock.quantity * products.unit_price')), 2) }}</p>
         </div>
         <div class="bg-white p-6 rounded-lg border border-green-border shadow-hover">
             <h4 class="text-sm font-medium text-text-secondary">Active Alerts</h4>

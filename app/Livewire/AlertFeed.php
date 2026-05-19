@@ -19,7 +19,7 @@ class AlertFeed extends Component
         }
     }
 
-    #[On('echo:alerts.*,LowStockAlert')]
+    #[On('echo:alerts,LowStockAlert')]
     public function handleAlert($payload)
     {
         // automatically handled by livewire re-rendering state

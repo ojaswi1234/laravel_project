@@ -5,10 +5,17 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 
 class StockChart extends Component
 {
     public $days = 7;
+
+    #[On('echo:stock,StockUpdated')]
+    public function handleStockUpdate()
+    {
+        $this->updatedDays();
+    }
 
     public function updatedDays()
     {

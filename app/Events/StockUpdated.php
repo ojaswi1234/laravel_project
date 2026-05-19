@@ -24,6 +24,7 @@ class StockUpdated implements ShouldBroadcastNow
     {
         return [
             new Channel('stock.'.$this->location_id),
+            new Channel('stock'),
         ];
     }
 }

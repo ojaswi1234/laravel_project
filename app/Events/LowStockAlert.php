@@ -21,6 +21,7 @@ class LowStockAlert implements ShouldBroadcastNow
     {
         return [
             new Channel('alerts.'.$this->location_id),
+            new Channel('alerts'),
         ];
     }
 }

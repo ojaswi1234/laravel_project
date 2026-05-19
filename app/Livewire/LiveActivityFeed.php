@@ -10,7 +10,7 @@ class LiveActivityFeed extends Component
 {
     public $limit = 10;
 
-    #[On('echo:stock.*,StockUpdated')]
+    #[On('echo:stock,StockUpdated')]
     public function handleStockUpdate($payload)
     {
         // View implicitly re-renders
